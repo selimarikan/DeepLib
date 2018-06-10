@@ -1,2 +1,2 @@
 # DeepLib
-A useful PyTorch wrapper to do many nice things
+A useful MXNet and PyTorch wrapper to do many nice things
