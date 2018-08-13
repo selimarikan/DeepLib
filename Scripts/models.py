@@ -2,6 +2,33 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+class TestNet(nn.Module):
+    def __init__(self, inputDimension, classCount, imageSize):
+        super(TestNet, self).__init__()
+        self.inputDimension = inputDimension
+        self.classCount = classCount
+        self.imageSize = imageSize
+
+        self.convIn = nn.Conv2d(in_channels=inputDimension, out_channels=16, kernel_size=(5,5), stride=(2,2), padding=(2,2), dilation=(1,1))
+        self.batNIn = nn.BatchNorm2d(num_features=16)
+        self.reluIn = nn.ReLU()
+
+        self.outMul = int(self.imageSize / 2) 
+            
+        self.fc = nn.Sequential(
+            nn.Linear(16 * self.outMul * self.outMul, self.classCount),
+            )
+        self.logsmax = nn.LogSoftmax()
+
+    def forward(self, x):
+        convResult = self.convIn(x)
+        batNResult = self.batNIn(convResult)
+        actiResult = self.reluIn(batNResult)
+
+        fcResult = self.fc(actiResult)
+        return self.logsmax(fcResult)
+
+
 class SurfNet(nn.Module):
     def __init__(self, classCount, imageSize):
         super(SurfNet, self).__init__()
