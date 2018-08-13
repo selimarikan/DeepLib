@@ -1,7 +1,21 @@
 import argparse
+import json
 import torch
 import torchvision
 import numpy as np
+
+configPath = './config.json'
+appConfig = None
+
+class JSONClass(object):
+    def __init__(self, jsonStr):
+        self.__dict__ = json.loads(jsonStr)
+
+def LoadConfig(configPath):
+    f = open(configPath, 'r')
+    configStr = f.readlines()
+    return JSONClass(configStr)
+    
 
 def ProcessArguments():
     argParser = argparse.ArgumentParser()
